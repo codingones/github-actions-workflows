@@ -4,7 +4,7 @@
 
 CodingOnes GitHub Actions Workflows is a toolkit providing a collection of reusable GitHub Actions Workflows.
 
-See `.github/workflow` for a list of all available workflows.
+See [workflows directory](.github/workflows) for a list of all available workflows.
 
 ## Table of contents
 
