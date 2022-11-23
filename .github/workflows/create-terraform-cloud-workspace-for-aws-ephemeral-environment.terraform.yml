@@ -1,0 +1,51 @@
+name: Create Terraform Cloud Workspace for AWS ephemeral environment
+
+on:
+  workflow_call:
+    inputs:
+      product:
+        required: true
+        type: string
+      service:
+        required: true
+        type: string
+      branch:
+        required: true
+        type: string
+
+    secrets:
+      TF_API_TOKEN:
+        required: true
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+
+jobs:
+  create-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout client infrastructure repository
+        uses: actions/checkout@v3
+        with:
+          repository: codingones/ephemeral-environment-infrastructure
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Init
+        id: terraform-init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: >-
+          terraform apply
+          -auto-approve
+          -input=false
+          -var="aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}"
+          -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          -var="product=${{ inputs.product }}"
+          -var="service=${{ inputs.service }}"
+          -var="branch=${{ inputs.branch }}"
