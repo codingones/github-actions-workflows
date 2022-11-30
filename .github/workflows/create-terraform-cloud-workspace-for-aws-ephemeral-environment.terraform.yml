@@ -48,4 +48,4 @@ jobs:
           -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
           -var="product=${{ inputs.product }}"
           -var="service=${{ inputs.service }}"
-          -var="branch=${{ inputs.branch }}"
+          -var="branch=$(echo ${{ inputs.branch }} | cut -d'/' -f3-4)"
