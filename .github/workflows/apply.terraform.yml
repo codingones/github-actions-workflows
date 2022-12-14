@@ -9,7 +9,8 @@ on:
       workspace-name:
         required: true
         type: string
-
+      json-base-64-tf-vars:
+        type: string
     secrets:
       TF_API_TOKEN:
         required: true
@@ -28,6 +29,11 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
+      - name: Create Terraform variables file
+        run: |
+          echo ${{ inputs.json-base-64-tf-vars }} | base64 --decode > terraform.tfvars.json
+          cat terraform.tfvars.json
+
       - name: Terraform Init
         env:
           TF_WORKSPACE: ${{ inputs.workspace-name }}
@@ -37,5 +43,7 @@ jobs:
       - name: Terraform Apply
         env:
           TF_WORKSPACE: ${{ inputs.workspace-name }}
-        run: |
-          terraform apply -auto-approve
+        run: >-
+          terraform apply
+          -auto-approve
+          -input=false
