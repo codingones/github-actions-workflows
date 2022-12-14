@@ -1,0 +1,40 @@
+name: Apply terraform to provision the infrastructure described in the target repository
+
+on:
+  workflow_call:
+    inputs:
+      infrastructure-repository:
+        required: true
+        type: string
+      workspace-name:
+        required: true
+        type: string
+
+    secrets:
+      TF_API_TOKEN:
+        required: true
+
+jobs:
+  create-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout client infrastructure repository
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ inputs.infrastructure-repository }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Init
+        id: terraform-init
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace-name }}
+        run: |
+          terraform init
+
+      - name: Terraform Apply
+        run: |
+          terraform apply -auto-approve
