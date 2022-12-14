@@ -41,9 +41,9 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: false
 
       - name: Terraform Init
-        id: terraform-init
         run: terraform init
 
       - name: Terraform Apply
@@ -56,8 +56,9 @@ jobs:
           -var="product=${{ inputs.product }}"
           -var="service=${{ inputs.service }}"
           -var="branch=$(echo ${{ inputs.branch }} | cut -d'/' -f3-4)"
+          -var="tf_api_token=${{ secrets.TF_API_TOKEN }}"
 
       - name: Set the terraform workspace name output as a workflow output
         id: tf-workspace
         run: |
-          echo "::set-output name=workspace::$(terraform output workspace_name)"
+          echo "workspace=$(terraform output -raw workspace_name)" >>$GITHUB_OUTPUT

@@ -29,12 +29,13 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Init
-        id: terraform-init
         env:
           TF_WORKSPACE: ${{ inputs.workspace-name }}
         run: |
           terraform init
 
       - name: Terraform Apply
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace-name }}
         run: |
           terraform apply -auto-approve
