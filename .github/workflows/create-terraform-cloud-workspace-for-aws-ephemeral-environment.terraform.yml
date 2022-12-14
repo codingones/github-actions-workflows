@@ -21,9 +21,17 @@ on:
       AWS_SECRET_ACCESS_KEY:
         required: true
 
+    outputs:
+      tf-workspace:
+        type: string
+        description: "Terraform workspace name within the organization"
+        value: ${{ jobs.create-environment.outputs.tf-workspace }}
+
 jobs:
   create-environment:
     runs-on: ubuntu-latest
+    outputs:
+      tf-workspace: ${{ steps.tf-workspace.outputs.workspace }}
     steps:
       - name: Checkout client infrastructure repository
         uses: actions/checkout@v3
@@ -49,3 +57,8 @@ jobs:
           -var="product=${{ inputs.product }}"
           -var="service=${{ inputs.service }}"
           -var="branch=$(echo ${{ inputs.branch }} | cut -d'/' -f3-4)"
+
+      - name: Set the terraform workspace name output as a workflow output
+        id: tf-workspace
+        run: |
+          echo "::set-output name=workspace::$(terraform output workspace_name)"
