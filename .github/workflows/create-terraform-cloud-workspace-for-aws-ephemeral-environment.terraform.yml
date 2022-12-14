@@ -23,7 +23,6 @@ on:
 
     outputs:
       tf-workspace:
-        type: string
         description: "Terraform workspace name within the organization"
         value: ${{ jobs.create-environment.outputs.tf-workspace }}
 
