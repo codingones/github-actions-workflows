@@ -55,7 +55,7 @@ jobs:
           -var="aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
           -var="product=${{ inputs.product }}"
           -var="service=${{ inputs.service }}"
-          -var="branch=$(echo ${{ inputs.branch }} | cut -d'/' -f3-4)"
+          -var="branch=$(echo ${{ inputs.branch }} | sed -r 's/refs\/heads\///')"
           -var="tf_api_token=${{ secrets.TF_API_TOKEN }}"
 
       - name: Set the terraform workspace name output as a workflow output
