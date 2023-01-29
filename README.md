@@ -10,7 +10,7 @@ See [workflows directory](.github/workflows) for a list of all available workflo
 
 - 🪧 [About](#about)
 - 🛠️ [Usage](#usage)
-- 🙌 [Contributing](#contributing)
+- 🤗 [Contributing](#contributing)
 - 📝 [Licence](#licence)
 
 ## Usage
