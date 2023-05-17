@@ -10,7 +10,7 @@ Example: Notify on success or error
     uses: codingones/github-actions-workflows/.github/workflows/notify-discord.yml@main
     with:
       bot-username: CI Failure Bot
-      notification-content: Some validation checks have failed for branch ${{ github.ref_name }}
+      notification-content: Some validation checks have failed for branch **${{ github.ref_name }}**
       embed-title: Go to the workflow
       embed-url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
     secrets:
@@ -24,7 +24,7 @@ Example: Notify on success or error
     uses: codingones/github-actions-workflows/.github/workflows/notify-discord.yml@main
     with:
       bot-username: CI Success Bot
-      notification-content: All checks have passed for branch ${{ github.ref_name }} !
+      notification-content: All checks have passed for branch **${{ github.ref_name }}** !
       embed-title: Go to the ${{ github.ref_name }} pull request
       embed-url: ${{ needs.pull-request.outputs.pull-request-url }}
     secrets:

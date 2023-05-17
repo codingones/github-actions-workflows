@@ -26,6 +26,7 @@ Example usage for each workflow:
 
 - [Notify on Discord CI status error or success](./docs/notify-discord.md)
 
+- [Create a release on push on main branch](./docs/semantic-release.md)
 
 ## Contributing
 

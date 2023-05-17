@@ -1,0 +1,65 @@
+# dependencies :
+# Official :
+# - actions/checkout@v3 (https://github.com/actions/checkout)
+# - actions/setup-node@v3 (https://github.com/actions/checkout)
+name: Semantic Release
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: false
+        type: string
+        default: 'lts/*'
+      install-dependencies-command:
+        required: false
+        type: string
+        default: 'npm ci'
+      cache-dependency-path:
+        required: false
+        type: string
+        default: 'package-lock.json'
+
+    secrets:
+      PAT:
+        required: true
+
+    outputs:
+      next-version:
+        description: 'The next release version'
+        value: ${{ jobs.release.outputs.next-version }}
+
+
+jobs:
+  release:
+    name: Release using semantic-release config.
+    runs-on: ubuntu-latest
+
+    outputs:
+      next-version: ${{ env.next_version }}
+
+    steps:
+      - name: Checkout repo with complete history
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 0
+
+      - name: Set up Node.js #does NOT install dependencies
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: ${{ inputs.package-manager }}
+          cache-dependency-path: ${{ inputs.cache-dependency-path }}
+
+      - name: Install dependencies #use cache from previous successful workflow runs if able
+        run: ${{ inputs.install-dependencies-command }}
+
+      - name: Release
+        id: release
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+        run: |
+          NEXT_VERSION=$(npx semantic-release --dry-run | grep 'The next release version is' | sed -E 's/.* ([[:digit:].]+)$/\1/')
+          echo "next_version=$NEXT_VERSION" >> $GITHUB_ENV 
+          npx semantic-release
