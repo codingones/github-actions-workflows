@@ -11,6 +11,10 @@ on:
         required: false
         type: string
         default: 'lts/*'
+      package-manager:
+        required: false
+        type: string
+        default: 'npm'
       install-dependencies-command:
         required: false
         type: string

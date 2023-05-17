@@ -31,6 +31,7 @@ jobs:
   release:
     uses: codingones/github-actions-workflows/.github/workflows/semantic-release.yml@main
     with:
+      package-manager: 'yarn'
       install-dependencies-command: "yarn install --frozen-lockfile"
       cache-dependency-path: "yarn.lock"
     secrets:
