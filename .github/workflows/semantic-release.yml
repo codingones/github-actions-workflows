@@ -25,9 +25,9 @@ on:
         required: true
 
     outputs:
-      next-version:
+      version:
         description: 'The next release version'
-        value: ${{ jobs.release.outputs.next-version }}
+        value: ${{ jobs.release.outputs.version }}
 
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      next-version: ${{ env.next_version }}
+      version: ${{ steps.latest-release.outputs.version }}
 
     steps:
       - name: Checkout repo with complete history
@@ -60,6 +60,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PAT }}
         run: |
-          NEXT_VERSION=$(npx semantic-release --dry-run | grep 'The next release version is' | sed -E 's/.* ([[:digit:].]+)$/\1/')
-          echo "next_version=$NEXT_VERSION" >> $GITHUB_ENV 
           npx semantic-release
+
+      - name: Get release version and changelog
+        id: latest-release
+        run: |
+          RELEASE_VERSION=$(gh release list --repo ${{ github.repository }} | head -n 1 | cut -f 2)
+          echo "version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
