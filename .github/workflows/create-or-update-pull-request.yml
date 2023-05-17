@@ -1,0 +1,48 @@
+# dependencies :
+# Official :
+# - actions/checkout@v3 (https://github.com/actions/checkout)
+# Marketplace :
+# - repo-sync/pull-request@v2 (https://github.com/repo-sync/pull-request)
+name: Create or Update Pull Request
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+
+    secrets:
+      PAT:
+        required: true
+    outputs:
+      pull-request-url:
+        description: "The pull request url"
+        value: ${{ jobs.create-or-update-pull-request.outputs.pull-request-url }}
+
+
+jobs:
+  create-or-update-pull-request:
+    runs-on: ubuntu-latest
+    outputs:
+      pull-request-url: ${{ steps.pull-request.outputs.pr_url }}
+      pull-request-name: ${{ steps.pull-request.outputs.pr_name }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT }}
+
+      - name: Pull Request
+        id: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: ${{ inputs.branch }}
+          destination_branch: 'main'
+          pr_title: ${{ inputs.branch }}
+          pr_body: |
+            *Please review before merging.*
+
+          pr_label: 'auto-pr'
+          pr_allow_empty: true
+          github_token: ${{ secrets.PAT }}

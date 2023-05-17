@@ -1,4 +1,4 @@
-name: Apply terraform to provision the infrastructure described in the target repository
+name: Apply terraform to destroy the infrastructure described in the target repository
 
 on:
   workflow_call:

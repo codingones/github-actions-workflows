@@ -1,0 +1,58 @@
+# Discord webhook notification structure (https://birdie0.github.io/discord-webhooks-guide/discord_webhook.html)
+# To get the webhook url: On A channel> 'Edit Channel' > 'Integrations' > 'Webhooks' > 'New Webhook' > 'Copy Webhook Url'
+name: Notify on Discord
+
+on:
+  workflow_call:
+    inputs:
+      bot-username:
+        required: false
+        type: string
+        default: 'CI Bot'
+      notification-content:
+        required: false
+        type: string
+        default: 'Some content. Required. Up to 2000 characters'
+      embed-title:
+        required: false
+        type: string
+        default: 'A workflow needs your attention !'
+      embed-url:
+        required: false
+        type: string
+        default: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+    secrets:
+      DISCORD_WEBHOOK:
+        required: true
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+    env:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+    steps:
+      - name: Has webhook url
+        run: echo "has_webhook_url=${DISCORD_WEBHOOK:+true}" >> $GITHUB_ENV
+
+      - name: Prepare payload
+        if: env.has_webhook_url == 'true'
+        run: >-
+          (jq -r '.' <<< '
+          {
+            "username": "${{ inputs.bot-username }}",
+            "content": "${{ inputs.notification-content }}",
+            "embeds": [{
+              "title": "${{ inputs.embed-title }}",
+              "url": "${{ inputs.embed-url }}"
+            }]
+          }'
+          ) > payload
+
+      - name: Send notification
+        if: env.has_webhook_url == 'true'
+        run: >-
+          curl
+          --header "Content-Type:application/json"
+          --request POST
+          --data @payload
+          ${{ secrets.DISCORD_WEBHOOK }}

@@ -1,0 +1,60 @@
+# dependencies :
+# Official :
+# - actions/checkout@v3 (https://github.com/actions/checkout)
+# - actions/setup-node@v3 (https://github.com/actions/checkout)
+name: Node Validation Matrix
+
+on:
+  workflow_call:
+    inputs:
+      validation-commands: #eg: '["npm run build", "npm run lint", "npm run test"]'
+        required: true
+        type: string
+      fail-fast:           #if true any command failure will cancel other running commands
+        required: false
+        type: boolean
+        default: false
+      node-version:
+        required: false
+        type: string
+        default: 'lts/*'
+      package-manager:
+        required: false
+        type: string
+        default: 'npm'
+      install-dependencies-command:
+        required: false
+        type: string
+        default: 'npm ci'
+      cache-dependency-path:
+        required: false
+        type: string
+        default: 'package-lock.json'
+
+jobs:
+  execute-command:
+    name: ' '
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: ${{ inputs.fail-fast }}
+      matrix:
+        command: ${{fromJson(inputs.validation-commands)}}
+    outputs:
+      job-status: ${{ job.status }}
+      command: ${{ matrix.command }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js #does NOT install dependencies
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: ${{ inputs.package-manager }}
+          cache-dependency-path: ${{ inputs.cache-dependency-path }}
+
+      - name: Install dependencies #use cache from previous successful workflow runs if able
+        run: ${{ inputs.install-dependencies-command }}
+
+      - name: Run Command
+        run: ${{ matrix.command }}

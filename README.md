@@ -15,36 +15,17 @@ See [workflows directory](.github/workflows) for a list of all available workflo
 
 ## Usage
 
-### Create Terraform Cloud Workspace for AWS ephemeral environment
+Example usage for each workflow:
+- [Create a Terraform Cloud Workspace for an AWS ephemeral environment](./docs/create-terraform-cloud-workspace-for-aws-ephemeral-environment.terraform.md)
 
-```yml
-create-feature-branch-workspace:
-  name: Create feature branch workspace
-  uses: codingones/github-actions-workflows/.github/workflows/create-terraform-cloud-workspace-for-aws-ephemeral-environment.terraform.yml@main
-  with:
-    product: 'codingones' # todo: replace with your own product name
-    service: 'invoice-api' # todo: replace with your own service name
-    branch: ${{ github.event.ref }}
-  secrets:
-    TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-```
+- [Apply the Terraform configuration](./docs/apply.terraform.md)
 
-### Apply Terraform
+- [Create or update a pull request from a branch name](./docs/create-or-update-pull-request.md)
 
-```yml
-deploy-feature-branch-environment:
-  name: Deploy feature branch environment
-  needs:
-    - create-feature-branch-workspace
-  uses: codingones/github-actions-workflows/.github/workflows/apply.terraform.yml@main
-  with:
-    infrastructure-repository: 'codingones/invoice-api-infrastructure' # todo: replace with your own repository to deploy
-    workspace-name: ${{ needs.create-feature-branch-workspace.outputs.tf-workspace }}
-  secrets:
-    TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-```
+- [Run a matrix Validation of project commands ](./docs/node-validation-matrix.md)
+
+- [Notify on Discord CI status error or success](./docs/notify-discord.md)
+
 
 ## Contributing
 
