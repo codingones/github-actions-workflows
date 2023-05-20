@@ -17,15 +17,10 @@ See [workflows directory](.github/workflows) for a list of all available workflo
 
 Example usage for each workflow:
 - [Create a Terraform Cloud Workspace for an AWS ephemeral environment](./docs/create-terraform-cloud-workspace-for-aws-ephemeral-environment.terraform.md)
-
 - [Apply the Terraform configuration](./docs/apply.terraform.md)
-
 - [Create or update a pull request from a branch name](./docs/create-or-update-pull-request.md)
-
 - [Run a matrix Validation of project commands ](./docs/node-validation-matrix.md)
-
 - [Notify on Discord CI status error or success](./docs/notify-discord.md)
-
 - [Create a release on push on main branch](./docs/semantic-release.md)
 
 ## Contributing
