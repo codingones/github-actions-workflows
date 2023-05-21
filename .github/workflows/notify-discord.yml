@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Has webhook url
         run: |
-          echo "has_webhook_url=${$DISCORD_WEBHOOK:+true}" >> $GITHUB_ENV
+          echo "has_webhook_url=${DISCORD_WEBHOOK:+true}" >> $GITHUB_ENV
           echo ${{ env.has_webhook_url }}
 
       - name: Prepare payload
