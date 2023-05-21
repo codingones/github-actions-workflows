@@ -1,4 +1,4 @@
-name: Apply terraform to destroy the infrastructure described in the target repository
+name: Destroy given modules of a workspace
 
 on:
   workflow_call:
@@ -9,6 +9,8 @@ on:
       workspace-name:
         required: true
         type: string
+      modules:
+        required: true
     secrets:
       TF_API_TOKEN:
         required: true
@@ -33,10 +35,10 @@ jobs:
         run: |
           terraform init
 
-      - name: Terraform Destroy
-        env:
-          TF_WORKSPACE: ${{ inputs.workspace-name }}
-        run: >-
-          terraform destroy
-          -auto-approve
-          -input=false
+      - name: Terraform Destroy Module
+        run: |
+          IFS=',' read -ra MODULES <<< "${{ github.event.inputs.modules }}"
+          for MODULE in "${MODULES[@]}"; do
+              echo "Removing $MODULE"
+              terraform destroy -auto-approve -target="module.$MODULE" || true
+          done
