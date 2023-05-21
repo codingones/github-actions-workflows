@@ -4,6 +4,7 @@ on:
   workflow_call:
     inputs:
       modules:
+        type: string
         required: true
     secrets:
       TF_API_TOKEN:
