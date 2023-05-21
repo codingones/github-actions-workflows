@@ -3,12 +3,6 @@ name: Destroy given modules of a workspace
 on:
   workflow_call:
     inputs:
-      infrastructure-repository:
-        required: true
-        type: string
-      workspace-name:
-        required: true
-        type: string
       modules:
         required: true
     secrets:
@@ -21,8 +15,6 @@ jobs:
     steps:
       - name: Checkout client infrastructure repository
         uses: actions/checkout@v3
-        with:
-          repository: ${{ inputs.infrastructure-repository }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -30,8 +22,6 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Init
-        env:
-          TF_WORKSPACE: ${{ inputs.workspace-name }}
         run: |
           terraform init
 
