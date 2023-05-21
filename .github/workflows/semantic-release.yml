@@ -27,6 +27,12 @@ on:
     secrets:
       PAT:
         required: true
+      AWS_ACCESS_KEY_ID:
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        required: false
+      AWS_DEFAULT_REGION:
+        required: false
 
     outputs:
       version:
@@ -63,6 +69,9 @@ jobs:
         id: release
         env:
           GH_TOKEN: ${{ secrets.PAT }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
         run: |
           npx semantic-release
 
