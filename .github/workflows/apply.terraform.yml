@@ -31,8 +31,10 @@ jobs:
 
       - name: Create Terraform variables file
         run: |
-          echo ${{ inputs.json-base-64-tf-vars }} | base64 --decode > terraform.tfvars.json
-          cat terraform.tfvars.json
+          if [ -n "${{ inputs.json-base-64-tf-vars }}" ]; then
+            echo ${{ inputs.json-base-64-tf-vars }} | base64 --decode > terraform.tfvars.json
+            cat terraform.tfvars.json
+          fi
 
       - name: Terraform Init
         env:
