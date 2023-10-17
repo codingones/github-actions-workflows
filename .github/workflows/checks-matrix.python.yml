@@ -30,7 +30,7 @@ jobs:
         run: |
           version=$(grep '^python =' pyproject.toml | sed 's/python = "//;s/"//;s/\^//')
           echo "Extracted python version: $version"
-          echo "::set-output name=version::$version"
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Setup Python
         uses: actions/setup-python@v4
