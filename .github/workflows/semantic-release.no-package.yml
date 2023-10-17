@@ -51,5 +51,7 @@ jobs:
       - name: Get release version  
         id: latest-release  
         run: |  
-          RELEASE_VERSION=$(gh release list --repo ${{ github.repository }} | head -n 1 | cut -f 1)          echo "version=$RELEASE_VERSION" >> "$GITHUB_ENV"        env:  
+          RELEASE_VERSION=$(gh release list --repo ${{ github.repository }} | head -n 1 | cut -f 1)         
+          echo "version=$RELEASE_VERSION" >> "$GITHUB_ENV"
+        env:  
           GH_TOKEN: ${{ secrets.PAT }}
