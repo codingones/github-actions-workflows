@@ -30,25 +30,8 @@ jobs:
         uses: actions/checkout@v4  
         with:  
           token: ${{ secrets.PAT }}  
-          fetch-depth: 0  
-  
-      - name: Install poetry  
-        run: pipx install poetry  
-  
-      - name: Extract Python version from pyproject.toml  
-        id: python-version  
-        run: |  
-          version=$(grep '^python =' pyproject.toml | sed 's/python = "//;s/"//;s/\^//')          echo "Extracted python version: $version"          echo "version=$version" >> $GITHUB_OUTPUT  
-      - name: Setup Python  
-        uses: actions/setup-python@v4  
-        with:  
-          python-version: ${{ steps.python-version.outputs.version }}  
-          cache: 'poetry'  
-  
-      - name: Install dependencies  
-        run: |   
-          poetry install  
-
+          fetch-depth: 0
+          
       - name: Release
         id: release
         env:
