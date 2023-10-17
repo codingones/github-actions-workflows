@@ -1,0 +1,45 @@
+name: Python Checks Workflow
+
+on:
+  workflow_call:
+    inputs:
+      validation-commands:
+        required: true
+        type: string
+      fail-fast:
+        required: true
+        type: boolean
+
+jobs:
+  python-checks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        command: ${{fromJson(inputs.validation-commands)}}
+      fail-fast: ${{inputs.fail-fast}}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - name: Extract Python version from pyproject.toml
+        id: python-version
+        run: |
+          version=$(grep '^python =' pyproject.toml | sed 's/python = "//;s/"//;s/\^//')
+          echo "Extracted python version: $version"
+          echo "::set-output name=version::$version"
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ steps.python-version.outputs.version }}
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run command
+        run: poetry run ${{ matrix.command }}
