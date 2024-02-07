@@ -1,7 +1,3 @@
-# dependencies :
-# Official :
-# - actions/checkout@v3 (https://github.com/actions/checkout)
-# - actions/setup-node@v3 (https://github.com/actions/checkout)
 name: Semantic Release
 
 on:
