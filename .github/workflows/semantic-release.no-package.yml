@@ -36,7 +36,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-          
+
+      #npm install semantic-release @rimac-technology/semantic-release-ecr --no-save
       - name: Release
         id: release
         env:
@@ -45,7 +46,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
         run: |
-          npm install semantic-release @rimac-technology/semantic-release-ecr --no-save
           npx semantic-release
           
       - name: Get release version  
