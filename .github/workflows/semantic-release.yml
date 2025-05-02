@@ -56,7 +56,6 @@ jobs:
         with:
           node-version: ${{ inputs.node-version }}
           cache: ${{ inputs.package-manager }}
-          cache-dependency-path: ${{ inputs.cache-dependency-path }}
 
       - name: Install dependencies #use cache from previous successful workflow runs if able
         run: ${{ inputs.install-dependencies-command }}
