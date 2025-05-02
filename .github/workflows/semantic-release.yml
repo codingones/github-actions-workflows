@@ -55,7 +55,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
-          cache: ${{ inputs.package-manager }}
 
       - name: Install dependencies #use cache from previous successful workflow runs if able
         run: ${{ inputs.install-dependencies-command }}
